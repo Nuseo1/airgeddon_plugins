@@ -11,7 +11,7 @@ plugin_description="A plugin to perform a WPA3-SAE Double Decker DoS attack (2.4
 plugin_author="Nuseo1"
 
 plugin_enabled=1
-plugin_minimum_ag_affected_version="12.0"
+plugin_minimum_ag_affected_version="12.01"
 plugin_maximum_ag_affected_version=""
 plugin_distros_supported=("*")
 
@@ -123,8 +123,10 @@ function exec_double_decker_attack() {
 	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${g1_topright_window} -T \"Double Decker attack\"" \
 		"${python3} ${scriptfolder}${plugins_dir}double_decker_attack.py ${bssid} ${channel} ${interface} ${language} '${pairs_arg}' ${band}" \
 		"Double Decker attack" "active"
-	wait_for_process "${python3} ${scriptfolder}${plugins_dir}double_decker_attack.py ${bssid} ${channel} ${interface} ${language} '${pairs_arg}' ${band}" \
-		"Double Decker attack"
+	if ! wait_for_process "${python3} ${scriptfolder}${plugins_dir}double_decker_attack.py ${bssid} ${channel} ${interface} ${language} '${pairs_arg}' ${band}" \
+		"Double Decker attack"; then
+		return 1
+	fi
 }
 
 # ----------------------------------------------------------------------

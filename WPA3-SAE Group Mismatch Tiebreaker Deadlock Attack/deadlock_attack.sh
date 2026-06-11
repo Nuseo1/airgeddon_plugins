@@ -6,7 +6,7 @@ plugin_name="WPA3-SAE Group Mismatch Tiebreaker Deadlock"
 plugin_description="Forces a Group Mismatch Tiebreaker Deadlock on WPA3-SAE APs"
 plugin_author="Nuseo1"
 plugin_enabled=1
-plugin_minimum_ag_affected_version="12.0"
+plugin_minimum_ag_affected_version="12.01"
 plugin_maximum_ag_affected_version=""
 plugin_distros_supported=("*")
 
@@ -171,7 +171,7 @@ function deadlock_attack_python3_validation() {
 function deadlock_attack_option() {
 	debug_print
 	get_aircrack_version
-	
+
 	if ! validate_aircrack_wpa3_version; then
 		echo
 		language_strings "${language}" 763 "red"
@@ -180,24 +180,24 @@ function deadlock_attack_option() {
 	fi
 	if ! deadlock_attack_python3_validation; then return 1; fi
 	if ! deadlock_attack_python3_script_validation; then return 1; fi
-	
+
 	if [[ -z ${bssid} ]] || [[ -z ${essid} ]] || [[ -z ${channel} ]]; then
 		echo
 		language_strings "${language}" 125 "yellow"
 		language_strings "${language}" 115 "read"
 		if ! explore_for_targets_option "WPA3"; then return 1; fi
 	fi
-	
+
 	if ! check_monitor_enabled "${interface}"; then
 		echo
 		language_strings "${language}" 14 "red"
 		language_strings "${language}" 115 "read"
 		return 1
 	fi
-	
+
 	if ! validate_wpa3_network; then return 1; fi
 	if ! validate_network_type "personal"; then return 1; fi
-	
+
 	echo
 	language_strings "${language}" "deadlock_attack_1" "blue"
 	echo
@@ -205,7 +205,7 @@ function deadlock_attack_option() {
 	echo
 	language_strings "${language}" 33 "yellow"
 	language_strings "${language}" 4 "read"
-	
+
 	exec_deadlock_attack
 }
 
@@ -216,7 +216,9 @@ function exec_deadlock_attack() {
 	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${g1_topright_window} -T \"WPA3 Tiebreaker Deadlock Attack\"" \
 	"${python3} ${scriptfolder}${plugins_dir}deadlock_attack.py ${bssid} ${channel} ${interface} ${language}" \
 	"WPA3 Tiebreaker Deadlock Attack" "active"
-	
-	wait_for_process "${python3} ${scriptfolder}${plugins_dir}deadlock_attack.py ${bssid} ${channel} ${interface} ${language}" \
-	"WPA3 Tiebreaker Deadlock Attack"
+
+	if ! wait_for_process "${python3} ${scriptfolder}${plugins_dir}deadlock_attack.py ${bssid} ${channel} ${interface} ${language}" \
+	"WPA3 Tiebreaker Deadlock Attack"; then
+		return 1
+	fi
 }
