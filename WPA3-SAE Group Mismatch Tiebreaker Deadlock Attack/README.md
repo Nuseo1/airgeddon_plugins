@@ -82,4 +82,4 @@ Without an event to trigger a state transition or deallocate the protocol instan
 ## Credits
 
 IEEE 802.11 Working Group – Acknowledged and patched as Erratum M in the standard update. 
-[WPA3-SAE Formal Attack Suite](https://github.com/Nuseo1/WPA3-SAE-Formal-Attack-Suite)
+Code from [WPA3-SAE Formal Attack Suite](https://github.com/Nuseo1/WPA3-SAE-Formal-Attack-Suite).
