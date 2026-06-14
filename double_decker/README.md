@@ -54,6 +54,5 @@ For reliable packet injection required by this attack, use a dedicated Wi‑Fi a
 
 ## Credits
 
-- **Nuseo1** – plugin development  
 - *WPA3‑SAE DoS research* 
 - Based on `sae_extractor.py` and research code from [WPA3-SAE-DoS-Research-Suite](https://github.com/Nuseo1/WPA3-SAE-DoS-Research-Suite)
