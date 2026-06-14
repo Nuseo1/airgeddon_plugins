@@ -87,4 +87,4 @@ The weakness is not only the nominal security level – MODP groups are also vul
 ## Credits
 
 - [**Mathy Vanhoef**](https://twitter.com/vanhoefm) & **Eyal Ronen** – Dragonblood research ([paper](https://eprint.iacr.org/2019/383))
-- Based on research code from [WPA3‑SAE‑DoS‑Research‑Suite](https://github.com/Nuseo1/WPA3-SAE-DoS-Research-Suite)
+- Based on research code from [WPA3-SAE Formal Attack Suite](https://github.com/Nuseo1/WPA3-SAE-Formal-Attack-Suite).
