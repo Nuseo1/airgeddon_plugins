@@ -5,68 +5,31 @@
 plugin_name="WPA3-SAE Group Mismatch Tiebreaker Deadlock"
 plugin_description="Forces a Group Mismatch Tiebreaker Deadlock on WPA3-SAE APs"
 plugin_author="Nuseo1"
+
 plugin_enabled=1
+
 plugin_minimum_ag_affected_version="12.01"
 plugin_maximum_ag_affected_version=""
 plugin_distros_supported=("*")
 
-function deadlock_attack_prehook_hookable_wpa3_attacks_menu() {
-	if [ "${arr['ENGLISH',756]}" = "6.  WPA3 Tiebreaker Deadlock attack" ]; then
-		plugin_x="deadlock_attack_option"
-		plugin_x_under_construction=""
-	elif [ "${arr['ENGLISH',757]}" = "7.  WPA3 Tiebreaker Deadlock attack" ]; then
-		plugin_y="deadlock_attack_option"
-		plugin_y_under_construction=""
-	elif [ "${arr['ENGLISH',812]}" = "8.  WPA3 Tiebreaker Deadlock attack" ]; then
-		plugin_z="deadlock_attack_option"
-		plugin_z_under_construction=""
-	fi
-}
+plugin_wpa3_menu_option_function="deadlock_attack_option"
+plugin_wpa3_menu_option_language_string="deadlock_attack_menu_option"
 
 function deadlock_attack_prehook_hookable_for_languages() {
-	if [ "${arr['ENGLISH',756]}" = "6.  WPA3 attack (use a plugin here)" ] || [ "${arr['ENGLISH',756]}" = "6.  WPA3 Tiebreaker Deadlock attack" ]; then
-		arr["ENGLISH",756]="6.  WPA3 Tiebreaker Deadlock attack"
-		arr["SPANISH",756]="6.  Ataque Tiebreaker Deadlock de WPA3"
-		arr["FRENCH",756]="\${pending_of_translation} 6.  Attaque Tiebreaker Deadlock WPA3"
-		arr["CATALAN",756]="\${pending_of_translation} 6.  Atac Tiebreaker Deadlock WPA3"
-		arr["PORTUGUESE",756]="\${pending_of_translation} 6.  Ataque Tiebreaker Deadlock WPA3"
-		arr["RUSSIAN",756]="\${pending_of_translation} 6.  Tiebreaker Deadlock WPA3"
-		arr["GREEK",756]="\${pending_of_translation} 6.  Tiebreaker Deadlock WPA3"
-		arr["ITALIAN",756]="\${pending_of_translation} 6.  Attacco Tiebreaker Deadlock WPA3"
-		arr["POLISH",756]="\${pending_of_translation} 6.  Atak Tiebreaker Deadlock WPA3"
-		arr["GERMAN",756]="6.  WPA3 Tiebreaker Deadlock Angriff"
-		arr["TURKISH",756]="\${pending_of_translation} 6.  WPA3 Tiebreaker Deadlock saldırısı"
-		arr["ARABIC",756]="\${pending_of_translation} 6.  Tiebreaker Deadlock WPA3"
-		arr["CHINESE",756]="\${pending_of_translation} 6.  WPA3 Tiebreaker Deadlock"
-	elif [ "${arr['ENGLISH',757]}" = "7.  WPA3 attack (use a plugin here)" ] || [ "${arr['ENGLISH',757]}" = "7.  WPA3 Tiebreaker Deadlock attack" ]; then
-		arr["ENGLISH",757]="7.  WPA3 Tiebreaker Deadlock attack"
-		arr["SPANISH",757]="7.  Ataque Tiebreaker Deadlock de WPA3"
-		arr["FRENCH",757]="\${pending_of_translation} 7.  Attaque Tiebreaker Deadlock WPA3"
-		arr["CATALAN",757]="\${pending_of_translation} 7.  Atac Tiebreaker Deadlock WPA3"
-		arr["PORTUGUESE",757]="\${pending_of_translation} 7.  Ataque Tiebreaker Deadlock WPA3"
-		arr["RUSSIAN",757]="\${pending_of_translation} 7.  Tiebreaker Deadlock WPA3"
-		arr["GREEK",757]="\${pending_of_translation} 7.  Tiebreaker Deadlock WPA3"
-		arr["ITALIAN",757]="\${pending_of_translation} 7.  Attacco Tiebreaker Deadlock WPA3"
-		arr["POLISH",757]="\${pending_of_translation} 7.  Atak Tiebreaker Deadlock WPA3"
-		arr["GERMAN",757]="7.  WPA3 Tiebreaker Deadlock Angriff"
-		arr["TURKISH",757]="\${pending_of_translation} 7.  WPA3 Tiebreaker Deadlock saldırısı"
-		arr["ARABIC",757]="\${pending_of_translation} 7.  Tiebreaker Deadlock WPA3"
-		arr["CHINESE",757]="\${pending_of_translation} 7.  WPA3 Tiebreaker Deadlock"
-	elif [ "${arr['ENGLISH',812]}" = "8.  WPA3 attack (use a plugin here)" ] || [ "${arr['ENGLISH',812]}" = "8.  WPA3 Tiebreaker Deadlock attack" ]; then
-		arr["ENGLISH",812]="8.  WPA3 Tiebreaker Deadlock attack"
-		arr["SPANISH",812]="8.  Ataque Tiebreaker Deadlock de WPA3"
-		arr["FRENCH",812]="\${pending_of_translation} 8.  Attaque Tiebreaker Deadlock WPA3"
-		arr["CATALAN",812]="\${pending_of_translation} 8.  Atac Tiebreaker Deadlock WPA3"
-		arr["PORTUGUESE",812]="\${pending_of_translation} 8.  Ataque Tiebreaker Deadlock WPA3"
-		arr["RUSSIAN",812]="\${pending_of_translation} 8.  Tiebreaker Deadlock WPA3"
-		arr["GREEK",812]="\${pending_of_translation} 8.  Tiebreaker Deadlock WPA3"
-		arr["ITALIAN",812]="\${pending_of_translation} 8.  Attacco Tiebreaker Deadlock WPA3"
-		arr["POLISH",812]="\${pending_of_translation} 8.  Atak Tiebreaker Deadlock WPA3"
-		arr["GERMAN",812]="8.  WPA3 Tiebreaker Deadlock Angriff"
-		arr["TURKISH",812]="\${pending_of_translation} 8.  WPA3 Tiebreaker Deadlock saldırısı"
-		arr["ARABIC",812]="\${pending_of_translation} 8.  Tiebreaker Deadlock WPA3"
-		arr["CHINESE",812]="\${pending_of_translation} 8.  WPA3 Tiebreaker Deadlock"
-	fi
+
+	arr["ENGLISH","deadlock_attack_menu_option"]="WPA3 Tiebreaker Deadlock attack"
+	arr["SPANISH","deadlock_attack_menu_option"]="Ataque Tiebreaker Deadlock de WPA3"
+	arr["FRENCH","deadlock_attack_menu_option"]="\${pending_of_translation} Attaque Tiebreaker Deadlock WPA3"
+	arr["CATALAN","deadlock_attack_menu_option"]="\${pending_of_translation} Atac Tiebreaker Deadlock WPA3"
+	arr["PORTUGUESE","deadlock_attack_menu_option"]="\${pending_of_translation} Ataque Tiebreaker Deadlock WPA3"
+	arr["RUSSIAN","deadlock_attack_menu_option"]="\${pending_of_translation} Tiebreaker Deadlock WPA3"
+	arr["GREEK","deadlock_attack_menu_option"]="\${pending_of_translation} Tiebreaker Deadlock WPA3"
+	arr["ITALIAN","deadlock_attack_menu_option"]="\${pending_of_translation} Attacco Tiebreaker Deadlock WPA3"
+	arr["POLISH","deadlock_attack_menu_option"]="\${pending_of_translation} Atak Tiebreaker Deadlock WPA3"
+	arr["GERMAN","deadlock_attack_menu_option"]="WPA3 Tiebreaker Deadlock Angriff"
+	arr["TURKISH","deadlock_attack_menu_option"]="\${pending_of_translation} WPA3 Tiebreaker Deadlock saldırısı"
+	arr["ARABIC","deadlock_attack_menu_option"]="\${pending_of_translation} Tiebreaker Deadlock WPA3"
+	arr["CHINESE","deadlock_attack_menu_option"]="\${pending_of_translation} WPA3 Tiebreaker Deadlock"
 
 	arr["ENGLISH","deadlock_attack_1"]="WPA3 Tiebreaker Deadlock forces the AP to accept a numeric greater MAC to trigger state-machine lock"
 	arr["SPANISH","deadlock_attack_1"]="El Tiebreaker Deadlock de WPA3 fuerza al AP a aceptar una MAC numéricamente superior para bloquearlo"

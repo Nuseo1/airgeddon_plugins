@@ -11,9 +11,13 @@ plugin_description="A plugin to perform a WPA3-SAE Double Decker DoS attack (2.4
 plugin_author="Nuseo1"
 
 plugin_enabled=1
+
 plugin_minimum_ag_affected_version="12.01"
 plugin_maximum_ag_affected_version=""
 plugin_distros_supported=("*")
+
+plugin_wpa3_menu_option_function="double_decker_attack_option"
+plugin_wpa3_menu_option_language_string="double_decker_attack_menu_option"
 
 declare -gA double_decker_attack_sae_pairs_cache
 
@@ -123,10 +127,8 @@ function exec_double_decker_attack() {
 	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${g1_topright_window} -T \"Double Decker attack\"" \
 		"${python3} ${scriptfolder}${plugins_dir}double_decker_attack.py ${bssid} ${channel} ${interface} ${language} '${pairs_arg}' ${band}" \
 		"Double Decker attack" "active"
-	if ! wait_for_process "${python3} ${scriptfolder}${plugins_dir}double_decker_attack.py ${bssid} ${channel} ${interface} ${language} '${pairs_arg}' ${band}" \
-		"Double Decker attack"; then
-		return 1
-	fi
+	wait_for_process "${python3} ${scriptfolder}${plugins_dir}double_decker_attack.py ${bssid} ${channel} ${interface} ${language} '${pairs_arg}' ${band}" \
+		"Double Decker attack"
 }
 
 # ----------------------------------------------------------------------
@@ -390,69 +392,23 @@ function double_decker_attack_option() {
 }
 
 # ----------------------------------------------------------------------
-# Menu prehook
-# ----------------------------------------------------------------------
-function double_decker_attack_prehook_hookable_wpa3_attacks_menu() {
-	if [[ "${arr["ENGLISH",756]}" == *"WPA3 Double Decker attack"* ]] || [[ "${arr["ENGLISH",756]}" == *"WPA3 attack (use a plugin here)"* ]]; then
-		plugin_x="double_decker_attack_option"
-		plugin_x_under_construction=""
-	elif [[ "${arr["ENGLISH",757]}" == *"WPA3 Double Decker attack"* ]] || [[ "${arr["ENGLISH",757]}" == *"WPA3 attack (use a plugin here)"* ]]; then
-		plugin_y="double_decker_attack_option"
-		plugin_y_under_construction=""
-	elif [[ "${arr["ENGLISH",812]}" == *"WPA3 Double Decker attack"* ]] || [[ "${arr["ENGLISH",812]}" == *"WPA3 attack (use a plugin here)"* ]]; then
-		plugin_z="double_decker_attack_option"
-		plugin_z_under_construction=""
-	fi
-}
-
-# ----------------------------------------------------------------------
 # Language strings
 # ----------------------------------------------------------------------
 function double_decker_attack_prehook_hookable_for_languages() {
 
-	if [ "${arr['ENGLISH',756]}" = "6.  WPA3 attack (use a plugin here)" ]; then
-		arr["ENGLISH",756]="6.  WPA3 Double Decker attack"
-		arr["SPANISH",756]="6.  Ataque WPA3 Double Decker"
-		arr["FRENCH",756]="\${pending_of_translation} 6.  Attaque WPA3 Double Decker"
-		arr["CATALAN",756]="\${pending_of_translation} 6.  Atac WPA3 Double Decker"
-		arr["PORTUGUESE",756]="\${pending_of_translation} 6.  Ataque WPA3 Double Decker"
-		arr["RUSSIAN",756]="\${pending_of_translation} 6.  Атака WPA3 Double Decker"
-		arr["GREEK",756]="\${pending_of_translation} 6.  Επίθεση WPA3 Double Decker"
-		arr["ITALIAN",756]="\${pending_of_translation} 6.  Attacco WPA3 Double Decker"
-		arr["POLISH",756]="\${pending_of_translation} 6.  Atak WPA3 Double Decker"
-		arr["GERMAN",756]="6.  WPA3 Double Decker Angriff"
-		arr["TURKISH",756]="\${pending_of_translation} 6.  WPA3 Double Decker saldırısı"
-		arr["ARABIC",756]="\${pending_of_translation} 6.  هجوم WPA3 Double Decker"
-		arr["CHINESE",756]="\${pending_of_translation} 6.  WPA3 Double Decker 攻击"
-	elif [ "${arr['ENGLISH',757]}" = "7.  WPA3 attack (use a plugin here)" ]; then
-		arr["ENGLISH",757]="7.  WPA3 Double Decker attack"
-		arr["SPANISH",757]="7.  Ataque WPA3 Double Decker"
-		arr["FRENCH",757]="\${pending_of_translation} 7.  Attaque WPA3 Double Decker"
-		arr["CATALAN",757]="\${pending_of_translation} 7.  Atac WPA3 Double Decker"
-		arr["PORTUGUESE",757]="\${pending_of_translation} 7.  Ataque WPA3 Double Decker"
-		arr["RUSSIAN",757]="\${pending_of_translation} 7.  Атака WPA3 Double Decker"
-		arr["GREEK",757]="\${pending_of_translation} 7.  Επίθεση WPA3 Double Decker"
-		arr["ITALIAN",757]="\${pending_of_translation} 7.  Attacco WPA3 Double Decker"
-		arr["POLISH",757]="\${pending_of_translation} 7.  Atak WPA3 Double Decker"
-		arr["GERMAN",757]="7.  WPA3 Double Decker Angriff"
-		arr["TURKISH",757]="\${pending_of_translation} 7.  WPA3 Double Decker saldırısı"
-		arr["ARABIC",757]="\${pending_of_translation} 7.  هجوم WPA3 Double Decker"
-		arr["CHINESE",757]="\${pending_of_translation} 7.  WPA3 Double Decker 攻击"
-	elif [ "${arr['ENGLISH',812]}" = "8.  WPA3 attack (use a plugin here)" ]; then
-		arr["ENGLISH",812]="8.  WPA3 Double Decker attack"
-		arr["SPANISH",812]="8.  Ataque WPA3 Double Decker"
-		arr["FRENCH",812]="\${pending_of_translation} 8.  Attaque WPA3 Double Decker"
-		arr["CATALAN",812]="\${pending_of_translation} 8.  Atac WPA3 Double Decker"
-		arr["PORTUGUESE",812]="\${pending_of_translation} 8.  Ataque WPA3 Double Decker"
-		arr["RUSSIAN",812]="\${pending_of_translation} 8.  Атака WPA3 Double Decker"
-		arr["GREEK",812]="\${pending_of_translation} 8.  Επίθεση WPA3 Double Decker"
-		arr["ITALIAN",812]="\${pending_of_translation} 8.  Attacco WPA3 Double Decker"
-		arr["POLISH",812]="\${pending_of_translation} 8.  Atak WPA3 Double Decker"
-		arr["GERMAN",812]="8.  WPA3 Double Decker Angriff"
-		arr["TURKISH",812]="\${pending_of_translation} 8.  WPA3 Double Decker saldırısı"
-		arr["ARABIC",812]="\${pending_of_translation} 8.  هجوم WPA3 Double Decker"
-		arr["CHINESE",812]="\${pending_of_translation} 8.  WPA3 Double Decker 攻击"
-	fi
+	arr["ENGLISH","double_decker_attack_menu_option"]="WPA3 Double Decker attack"
+	arr["SPANISH","double_decker_attack_menu_option"]="Ataque WPA3 Double Decker"
+	arr["FRENCH","double_decker_attack_menu_option"]="\${pending_of_translation} Attaque WPA3 Double Decker"
+	arr["CATALAN","double_decker_attack_menu_option"]="\${pending_of_translation} Atac WPA3 Double Decker"
+	arr["PORTUGUESE","double_decker_attack_menu_option"]="\${pending_of_translation} Ataque WPA3 Double Decker"
+	arr["RUSSIAN","double_decker_attack_menu_option"]="\${pending_of_translation} Атака WPA3 Double Decker"
+	arr["GREEK","double_decker_attack_menu_option"]="\${pending_of_translation} Επίθεση WPA3 Double Decker"
+	arr["ITALIAN","double_decker_attack_menu_option"]="\${pending_of_translation} Attacco WPA3 Double Decker"
+	arr["POLISH","double_decker_attack_menu_option"]="\${pending_of_translation} Atak WPA3 Double Decker"
+	arr["GERMAN","double_decker_attack_menu_option"]="WPA3 Double Decker Angriff"
+	arr["TURKISH","double_decker_attack_menu_option"]="\${pending_of_translation} WPA3 Double Decker saldırısı"
+	arr["ARABIC","double_decker_attack_menu_option"]="\${pending_of_translation} هجوم WPA3 Double Decker"
+	arr["CHINESE","double_decker_attack_menu_option"]="\${pending_of_translation} WPA3 Double Decker 攻击"
 
 	# double_decker_attack_1
 	arr["ENGLISH","double_decker_attack_1"]="WPA3 Double Decker DoS combines Omnivore and Muted attacks"
