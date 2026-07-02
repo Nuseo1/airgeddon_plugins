@@ -12,65 +12,24 @@ plugin_minimum_ag_affected_version="12.01"
 plugin_maximum_ag_affected_version=""
 plugin_distros_supported=("*")
 
-function downgrade_attack_prehook_hookable_wpa3_attacks_menu() {
-
-	if [ "${arr['ENGLISH',756]}" = "6.  WPA3 group downgrade attack" ]; then
-		plugin_x="downgrade_attack_option"
-		plugin_x_under_construction=""
-	elif [ "${arr['ENGLISH',757]}" = "7.  WPA3 group downgrade attack" ]; then
-		plugin_y="downgrade_attack_option"
-		plugin_y_under_construction=""
-	elif [ "${arr['ENGLISH',812]}" = "8.  WPA3 group downgrade attack" ]; then
-		plugin_z="downgrade_attack_option"
-		plugin_z_under_construction=""
-	fi
-}
+plugin_wpa3_menu_option_function="downgrade_attack_option"
+plugin_wpa3_menu_option_language_string="downgrade_attack_menu_option"
 
 function downgrade_attack_prehook_hookable_for_languages() {
 
-	if [ "${arr['ENGLISH',756]}" = "6.  WPA3 attack (use a plugin here)" ]; then
-		arr["ENGLISH",756]="6.  WPA3 group downgrade attack"
-		arr["SPANISH",756]="6.  Ataque de downgrade de WPA3 group"
-		arr["FRENCH",756]="\${pending_of_translation} 6.  Attaque de downgrade de groupe WPA3"
-		arr["CATALAN",756]="\${pending_of_translation} 6.  Atac de downgrade de grup WPA3"
-		arr["PORTUGUESE",756]="\${pending_of_translation} 6.  Ataque de downgrade de grupo WPA3"
-		arr["RUSSIAN",756]="\${pending_of_translation} 6.  Атака downgrade группы WPA3"
-		arr["GREEK",756]="\${pending_of_translation} 6.  Επίθεση downgrade ομάδας WPA3"
-		arr["ITALIAN",756]="\${pending_of_translation} 6.  Attacco di downgrade di gruppo WPA3"
-		arr["POLISH",756]="\${pending_of_translation} 6.  Atak downgrade grupy WPA3"
-		arr["GERMAN",756]="6.  WPA3 Gruppen Downgrade Angriff"
-		arr["TURKISH",756]="\${pending_of_translation} 6.  WPA3 grup downgrade saldırısı"
-		arr["ARABIC",756]="\${pending_of_translation} 6.  هجوم downgrade مجموعة WPA3"
-		arr["CHINESE",756]="\${pending_of_translation} 6.  WPA3 组 downgrade 攻击"
-	elif [ "${arr['ENGLISH',757]}" = "7.  WPA3 attack (use a plugin here)" ]; then
-		arr["ENGLISH",757]="7.  WPA3 group downgrade attack"
-		arr["SPANISH",757]="7.  Ataque de downgrade de WPA3 group"
-		arr["FRENCH",757]="\${pending_of_translation} 7.  Attaque de downgrade de groupe WPA3"
-		arr["CATALAN",757]="\${pending_of_translation} 7.  Atac de downgrade de grup WPA3"
-		arr["PORTUGUESE",757]="\${pending_of_translation} 7.  Ataque de downgrade de grupo WPA3"
-		arr["RUSSIAN",757]="\${pending_of_translation} 7.  Атака downgrade группы WPA3"
-		arr["GREEK",757]="\${pending_of_translation} 7.  Επίθεση downgrade ομάδας WPA3"
-		arr["ITALIAN",757]="\${pending_of_translation} 7.  Attacco di downgrade di gruppo WPA3"
-		arr["POLISH",757]="\${pending_of_translation} 7.  Atak downgrade grupy WPA3"
-		arr["GERMAN",757]="7.  WPA3 Gruppen Downgrade Angriff"
-		arr["TURKISH",757]="\${pending_of_translation} 7.  WPA3 grup downgrade saldırısı"
-		arr["ARABIC",757]="\${pending_of_translation} 7.  هجوم downgrade مجموعة WPA3"
-		arr["CHINESE",757]="\${pending_of_translation} 7.  WPA3 组 downgrade 攻击"
-	elif [ "${arr['ENGLISH',812]}" = "8.  WPA3 attack (use a plugin here)" ]; then
-		arr["ENGLISH",812]="8.  WPA3 group downgrade attack"
-		arr["SPANISH",812]="8.  Ataque de downgrade de WPA3 group"
-		arr["FRENCH",812]="\${pending_of_translation} 8.  Attaque de downgrade de groupe WPA3"
-		arr["CATALAN",812]="\${pending_of_translation} 8.  Atac de downgrade de grup WPA3"
-		arr["PORTUGUESE",812]="\${pending_of_translation} 8.  Ataque de downgrade de grupo WPA3"
-		arr["RUSSIAN",812]="\${pending_of_translation} 8.  Атака downgrade группы WPA3"
-		arr["GREEK",812]="\${pending_of_translation} 8.  Επίθεση downgrade ομάδας WPA3"
-		arr["ITALIAN",812]="\${pending_of_translation} 8.  Attacco di downgrade di gruppo WPA3"
-		arr["POLISH",812]="\${pending_of_translation} 8.  Atak downgrade grupy WPA3"
-		arr["GERMAN",812]=" 8.  WPA3 Gruppen Downgrade Angriff"
-		arr["TURKISH",812]="\${pending_of_translation} 8.  WPA3 grup downgrade saldırısı"
-		arr["ARABIC",812]="\${pending_of_translation} 8.  هجوم downgrade مجموعة WPA3"
-		arr["CHINESE",812]="\${pending_of_translation} 8.  WPA3 组 downgrade 攻击"
-	fi
+	arr["ENGLISH","downgrade_attack_menu_option"]="WPA3 group downgrade attack"
+	arr["SPANISH","downgrade_attack_menu_option"]="Ataque de downgrade de WPA3 group"
+	arr["FRENCH","downgrade_attack_menu_option"]="\${pending_of_translation} Attaque de downgrade de groupe WPA3"
+	arr["CATALAN","downgrade_attack_menu_option"]="\${pending_of_translation} Atac de downgrade de grup WPA3"
+	arr["PORTUGUESE","downgrade_attack_menu_option"]="\${pending_of_translation} Ataque de downgrade de grupo WPA3"
+	arr["RUSSIAN","downgrade_attack_menu_option"]="\${pending_of_translation} Атака downgrade группы WPA3"
+	arr["GREEK","downgrade_attack_menu_option"]="\${pending_of_translation} Επίθεση downgrade ομάδας WPA3"
+	arr["ITALIAN","downgrade_attack_menu_option"]="\${pending_of_translation} Attacco di downgrade di gruppo WPA3"
+	arr["POLISH","downgrade_attack_menu_option"]="\${pending_of_translation} Atak downgrade grupy WPA3"
+	arr["GERMAN","downgrade_attack_menu_option"]="WPA3 Gruppen Downgrade Angriff"
+	arr["TURKISH","downgrade_attack_menu_option"]="\${pending_of_translation} WPA3 grup downgrade saldırısı"
+	arr["ARABIC","downgrade_attack_menu_option"]="\${pending_of_translation} هجوم downgrade مجموعة WPA3"
+	arr["CHINESE","downgrade_attack_menu_option"]="\${pending_of_translation} WPA3 组 downgrade 攻击"
 
 	arr["ENGLISH","downgrade_attack_1"]="WPA3 group downgrade forces the AP to accept weak MODP groups (22/23)"
 	arr["SPANISH","downgrade_attack_1"]="El downgrade de WPA3 group fuerza al AP a aceptar grupos MODP débiles (22/23)"
@@ -117,7 +76,6 @@ function downgrade_attack_prehook_hookable_for_languages() {
 }
 
 function downgrade_attack_python3_script_validation() {
-
 	if ! [ -f "${scriptfolder}${plugins_dir}downgrade_attack.py" ]; then
 		echo
 		language_strings "${language}" "downgrade_attack_3" "red"
@@ -128,7 +86,6 @@ function downgrade_attack_python3_script_validation() {
 }
 
 function downgrade_attack_python3_validation() {
-
 	if ! hash python3 2> /dev/null; then
 		if ! hash python 2> /dev/null; then
 			echo
@@ -179,9 +136,7 @@ function downgrade_attack_python3_validation() {
 }
 
 function downgrade_attack_option() {
-
 	debug_print
-
 	get_aircrack_version
 	if ! validate_aircrack_wpa3_version; then
 		echo
@@ -223,10 +178,8 @@ function exec_downgrade_attack() {
 	debug_print
 
 	iw dev "${interface}" set channel "${channel}" > /dev/null 2>&1
+
 	recalculate_windows_sizes
 	manage_output "+j -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${g1_topright_window} -T \"WPA3 Group Downgrade Attack\"" "${python3} ${scriptfolder}${plugins_dir}downgrade_attack.py ${bssid} ${channel} ${interface} ${language}" "WPA3 Group Downgrade Attack" "active"
-
-	if ! wait_for_process "${python3} ${scriptfolder}${plugins_dir}downgrade_attack.py ${bssid} ${channel} ${interface} ${language}" "WPA3 Group Downgrade Attack"; then
-		return 1
-	fi
+	wait_for_process "${python3} ${scriptfolder}${plugins_dir}downgrade_attack.py ${bssid} ${channel} ${interface} ${language}" "WPA3 Group Downgrade Attack"
 }
