@@ -28,7 +28,7 @@ Instead of the mandatory **group 19** (NIST P‑256 elliptic curve), the attack 
 
 ## Prerequisites
 
-- **airgeddon ≥ 12.0**
+- **airgeddon ≥ 12.01**
 - **python3** (≥ 3.6)
 - **python3-scapy** – install with: `sudo apt install python3-scapy`
 - A Wi‑Fi adapter in **monitor mode** on the target channel
