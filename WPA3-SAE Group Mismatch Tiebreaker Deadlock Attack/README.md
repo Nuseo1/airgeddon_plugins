@@ -33,7 +33,7 @@ Instead of relying on cryptographic weaknesses, this attack targets the SAE grou
 
 ## Prerequisites
 
-- **airgeddon ≥ 12.0**
+- **airgeddon ≥ 12.01**
 - **python3** (≥ 3.6)
 - **python3-scapy** – install with: `sudo apt install python3-scapy`
 - A Wi-Fi adapter in **monitor mode** on the target channel
