@@ -27,7 +27,7 @@ It combines the **Omnivore** and **Muted** attack modes to overload the target r
 
 ## Prerequisites
 
-- **airgeddon** ≥ 12.0  
+- **airgeddon** ≥ 12.01  
 - **wpa_supplicant**  
 - A second Wi‑Fi adapter (managed mode) for automatic SAE capture – optional if you already have 20 pairs.
 
