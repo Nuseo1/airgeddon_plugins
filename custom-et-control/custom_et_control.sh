@@ -12,7 +12,7 @@ plugin_name="Manual Evil Twin Control"
 plugin_description="Plugin for manually selecting the BSSID, channel, and ESSID for Evil Twin attacks."
 plugin_author="Nuseo1"
 plugin_enabled=1
-plugin_minimum_ag_affected_version="12.0"
+plugin_minimum_ag_affected_version="12.02"
 plugin_maximum_ag_affected_version=""
 plugin_distros_supported=("*")
 
@@ -451,12 +451,13 @@ function custom_et_control_interactive_prompt() {
 		while [[ ${valid_band} -eq 0 ]]; do
 			read -rp "> " custom_band_choice
 			case "${custom_band_choice}" in
-				1) band="2.4Ghz"; valid_band=1 ;;
-				2) band="5Ghz"; valid_band=1 ;;
-				3) band="6Ghz"; valid_band=1 ;;
+				1) band="${band_24ghz}"; target_band_id="${band_24ghz}"; valid_band=1 ;;
+				2) band="${band_5ghz}"; target_band_id="${band_5ghz}"; valid_band=1 ;;
+				3) band="${band_6ghz}"; target_band_id="${band_6ghz}"; valid_band=1 ;;
 				*) echo -e "${red_color}Invalid / Ungültig${normal_color}" ;;
 			esac
 		done
+		echo "${target_band_id}" > "${tmpdir}${bandfile}"
 		echo -e "${green_color}Band -> ${band}${normal_color}"
 	else
 		echo -e "${green_color}${arr["${lang_key}","custom_et_text_14"]} ${channel}${normal_color}"
