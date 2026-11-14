@@ -32,6 +32,17 @@ This plugin exploits a logical state machine flaw in the WPA3-SAE protocol to ca
 * **Adapter-Independent Design** – Carefully designed to work out-of-the-box on a wide variety of Wi-Fi chipsets (e.g., Intel Wireless-AC, Alfa AWUS036ACH, Ralink RT3070).
 * **Fully multi-language** – 13 languages built-in.
 
+### 5. WPA3-SAE Companion Suite + Auto-Close Workflow (WPA2/WPA3 Transition Mode)
+
+This external companion workflow is designed specifically for **WPA2/WPA3 Transition Mode** networks, where a valid WPA2 handshake is captured first!
+
+`airgeddon` still verifies the entered password directly against that captured handshake as usual. The WPA3-SAE DoS script just runs alongside `airgeddon` to block WPA3/PMF (802.11w) clients that are immune to standard WPA2 deauths, forcing them to connect to the Evil Twin. Also, the monitor script (`watch_pass_auto_close_en.sh`) doesn't stop on wrong attempts (`ag.et_attempts.txt`) — it only stops the WPA3 attack once `airgeddon` has verified the password against the handshake and written the final `evil_twin_captive_portal_password-*.txt` file.
+
+* **WPA2/WPA3 Transition Mode Support** – Combines `airgeddon`'s native WPA2 handshake verification with parallel WPA3-SAE DoS against PMF-protected clients.
+* **Automatic Channel Tracking** – Detects if the target AP changes channels and automatically hops the attack adapter(s) to the new channel.
+* **Verified Auto-Close (`SIGTERM`)** – Logs live inputs and failed attempts without interrupting the attack, terminating the WPA3 DoS only after `airgeddon` confirms the correct password.
+* **Full Documentation & Scripts:** [WPA3-SAE-Formal-Attack-Suite – Step 4: airgeddon Captive Portal + Auto-Close Workflow](https://github.com/Nuseo1/WPA3-SAE-Formal-Attack-Suite/tree/dev#step-4-optional-airgeddon-captive-portal--auto-close-workflow)
+
 ---
 
 ## Installation
